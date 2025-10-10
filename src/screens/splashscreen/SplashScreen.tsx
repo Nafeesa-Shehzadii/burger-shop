@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { styles } from './styles';
 type Props = {
   onGetStarted: () => void;
@@ -11,7 +11,11 @@ const SplashScreen = ({ onGetStarted }: Props) => {
       {/* Food Image Circle */}
       <View style={styles.imageContainer}>
         <View style={styles.imagePlaceholder}>
-          <Text style={styles.imagePlaceholderText}>🍔</Text>
+          <Image
+            source={require('../../assets/Burger.jpg')}
+            style={styles.imagePlaceholderText}
+            resizeMode="cover"
+          />
         </View>
       </View>
 

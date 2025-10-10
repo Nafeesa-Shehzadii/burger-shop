@@ -18,6 +18,9 @@ const MenuScreen = ({ onProductPress }: Props) => {
     { id: '1', name: 'Beef Burger', price: '$20', rating: 4.8 },
     { id: '2', name: 'Cheese Burger', price: '$18', rating: 4.6 },
     { id: '3', name: 'Chicken Burger', price: '$15', rating: 4.7 },
+    { id: '4', name: 'coca cola', price: '$20', rating: 4.8 },
+    { id: '5', name: 'sandwitch', price: '$18', rating: 4.6 },
+    { id: '6', name: 'Chicken Burger', price: '$15', rating: 4.7 },
   ];
 
   return (

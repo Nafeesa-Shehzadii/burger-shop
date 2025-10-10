@@ -80,6 +80,11 @@ export const styles = StyleSheet.create({
   categoryEmoji: {
     fontSize: 30,
   },
+  categoryImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
+  },
   section: {
     marginTop: 25,
     paddingHorizontal: 20,

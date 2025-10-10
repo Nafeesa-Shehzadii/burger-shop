@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
       backgroundColor: '#FFFFFF',
       alignItems: 'center',
       justifyContent: 'center',
+      overflow: 'hidden',
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -27,14 +28,15 @@ export const styles = StyleSheet.create({
       elevation: 8,
     },
     imagePlaceholderText: {
-      fontSize: 80,
+      width: 180,
+      height: 180,
+      borderRadius: 90,
     },
     title: {
       fontSize: 36,
       fontWeight: 'bold',
       color: '#FFFFFF',
       textAlign: 'center',
-      lineHeight: 44,
     },
     button: {
       backgroundColor: '#FFFFFF',
