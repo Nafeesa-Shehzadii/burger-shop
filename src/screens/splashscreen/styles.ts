@@ -1,19 +1,21 @@
 import { StyleSheet }  from 'react-native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
 export const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#3D5CFF',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingHorizontal: 20,
+      paddingHorizontal: scale(20),
     },
     imageContainer: {
-      marginBottom: 40,
+      marginBottom: verticalScale(40),
     },
     imagePlaceholder: {
-      width: 180,
-      height: 180,
-      borderRadius: 90,
+      width: scale(180),
+      height: scale(180),
+      borderRadius: scale(90),
       backgroundColor: '#FFFFFF',
       alignItems: 'center',
       justifyContent: 'center',
@@ -21,41 +23,41 @@ export const styles = StyleSheet.create({
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
-        height: 4,
+        height: verticalScale(4),
       },
       shadowOpacity: 0.3,
-      shadowRadius: 8,
+      shadowRadius: moderateScale(8),
       elevation: 8,
     },
     imagePlaceholderText: {
-      width: 180,
-      height: 180,
-      borderRadius: 90,
+      width: scale(180),
+      height: scale(180),
+      borderRadius: scale(90),
     },
     title: {
-      fontSize: 36,
+      fontSize: moderateScale(36),
       fontWeight: 'bold',
       color: '#FFFFFF',
       textAlign: 'center',
     },
     button: {
       backgroundColor: '#FFFFFF',
-      paddingHorizontal: 40,
-      paddingVertical: 14,
-      borderRadius: 25,
-      marginTop: 50,
+      paddingHorizontal: scale(40),
+      paddingVertical: verticalScale(14),
+      borderRadius: moderateScale(25),
+      marginTop: verticalScale(50),
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
-        height: 2,
+        height: verticalScale(2),
       },
       shadowOpacity: 0.2,
-      shadowRadius: 4,
+      shadowRadius: moderateScale(4),
       elevation: 4,
     },
     buttonText: {
       color: '#3D5CFF',
-      fontSize: 16,
+      fontSize: moderateScale(16),
       fontWeight: '600',
     },
   });

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export const styles = StyleSheet.create({
     container: {
@@ -8,14 +9,14 @@ export const styles = StyleSheet.create({
       right: 0,
       flexDirection: 'row',
       backgroundColor: '#FFFFFF',
-      paddingVertical: 12,
-      paddingBottom: 20,
+      paddingVertical: verticalScale(12),
+      paddingBottom: verticalScale(20),
       borderTopWidth: 1,
       borderTopColor: '#E0E0E0',
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: -2 },
+      shadowOffset: { width: 0, height: verticalScale(-2) },
       shadowOpacity: 0.1,
-      shadowRadius: 8,
+      shadowRadius: moderateScale(8),
       elevation: 10,
     },
     tab: {
@@ -25,38 +26,37 @@ export const styles = StyleSheet.create({
     },
     iconContainer: {
       position: 'relative',
-      padding: 8,
+      padding: moderateScale(8),
     },
     activeIcon: {
       backgroundColor: '#E8EDFF',
-      borderRadius: 12,
+      borderRadius: moderateScale(12),
     },
     icon: {
-      fontSize: 24,
+      fontSize: moderateScale(24),
     },
     activeDot: {
-      width: 6,
-      height: 6,
-      borderRadius: 3,
+      width: scale(6),
+      height: verticalScale(6),
+      borderRadius: moderateScale(3),
       backgroundColor: '#3D5CFF',
-      marginTop: 4,
+      marginTop: verticalScale(4),
     },
     badge: {
       position: 'absolute',
-      top: 2,
-      right: 2,
+      top: verticalScale(2),
+      right: scale(2),
       backgroundColor: '#FF6B6B',
-      borderRadius: 10,
-      minWidth: 18,
-      height: 18,
+      borderRadius: moderateScale(10),
+      minWidth: scale(18),
+      height: verticalScale(18),
       alignItems: 'center',
       justifyContent: 'center',
-      paddingHorizontal: 4,
+      paddingHorizontal: scale(4),
     },
     badgeText: {
       color: '#FFFFFF',
-      fontSize: 10,
+      fontSize: moderateScale(10),
       fontWeight: 'bold',
     },
   });
-  
