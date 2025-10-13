@@ -1,12 +1,18 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/types';
 import { styles } from './styles';
 
-type Props = {
-  onProductPress?: () => void;
-};
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const MenuScreen = ({ onProductPress }: Props) => {
+const MenuScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
+
+  const handleProductPress = () => {
+    navigation.navigate('ProductDetails');
+  };
   const categories = [
     { id: '1', name: 'All', emoji: '🍔', color: '#FF6B6B' },
     { id: '2', name: 'Burger', emoji: '🍔', color: '#4ECDC4' },
@@ -83,7 +89,7 @@ const MenuScreen = ({ onProductPress }: Props) => {
             <TouchableOpacity
               key={item.id}
               style={styles.itemCard}
-              onPress={onProductPress} // Add this line
+              onPress={handleProductPress}
             >
               <View style={styles.itemImagePlaceholder}>
                 <Text style={styles.itemEmoji}>🍔</Text>

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/types';
 import { styles } from './styles';
 
 type AddOn = {
@@ -9,7 +12,10 @@ type AddOn = {
   selected: boolean;
 };
 
-const ProductDetailsScreen = ({ navigation }: any) => {
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ProductDetails'>;
+
+const ProductDetailsScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
   const [quantity, setQuantity] = useState(1);
   const [addOns, setAddOns] = useState<AddOn[]>([
     { id: '1', name: 'Pepper Julienned', emoji: '🌶️', selected: false },
@@ -38,7 +44,7 @@ const ProductDetailsScreen = ({ navigation }: any) => {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation?.goBack()}
+          onPress={() => navigation.goBack()}
         >
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>

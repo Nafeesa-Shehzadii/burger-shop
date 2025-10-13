@@ -1,11 +1,18 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/types';
 import { styles } from './styles';
-type Props = {
-  onGetStarted: () => void;
-};
 
-const SplashScreen = ({ onGetStarted }: Props) => {
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Splash'>;
+
+const SplashScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
+
+  const handleGetStarted = () => {
+    navigation.replace('MainTabs');
+  };
   return (
     <View style={styles.container}>
       {/* Food Image Circle */}
@@ -24,7 +31,7 @@ const SplashScreen = ({ onGetStarted }: Props) => {
       <Text style={styles.title}>Your Food</Text>
 
       {/* Get Started Button */}
-      <TouchableOpacity style={styles.button} onPress={onGetStarted}>
+      <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
     </View>
