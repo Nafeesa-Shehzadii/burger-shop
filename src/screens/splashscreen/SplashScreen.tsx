@@ -11,7 +11,7 @@ const SplashScreen = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const handleGetStarted = () => {
-    navigation.replace('MainTabs');
+    navigation.replace('DrawerNav');
   };
   return (
     <View style={styles.container}>

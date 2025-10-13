@@ -2,8 +2,12 @@ import type { NavigatorScreenParams } from '@react-navigation/native';
 
 export type RootStackParamList = {
   Splash: undefined;
-  MainTabs: NavigatorScreenParams<MainTabParamList>;
+  DrawerNav: NavigatorScreenParams<DrawerParamList>;
   ProductDetails: undefined;
+};
+
+export type DrawerParamList = {
+  MainTabs: NavigatorScreenParams<MainTabParamList>;
 };
 
 export type MainTabParamList = {

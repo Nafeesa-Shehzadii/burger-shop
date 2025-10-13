@@ -2,16 +2,26 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../../navigation/types';
+import type { DrawerNavigationProp } from '@react-navigation/drawer';
+import type {
+  RootStackParamList,
+  DrawerParamList,
+} from '../../navigation/types';
 import { styles } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type DrawerNavProp = DrawerNavigationProp<DrawerParamList>;
 
 const MenuScreen = () => {
   const navigation = useNavigation<NavigationProp>();
+  const drawerNavigation = useNavigation<DrawerNavProp>();
 
   const handleProductPress = () => {
     navigation.navigate('ProductDetails');
+  };
+
+  const handleMenuPress = () => {
+    drawerNavigation.openDrawer();
   };
   const categories = [
     { id: '1', name: 'All', emoji: '🍔', color: '#FF6B6B' },
@@ -33,12 +43,15 @@ const MenuScreen = () => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
+        {/* <TouchableOpacity style={styles.menuIcon}></TouchableOpacity> */}
         <Text style={styles.headerTitle}>Menu</Text>
-        <TouchableOpacity style={styles.cartIcon}>
-          <Text style={styles.cartIconText}>🛒</Text>
-          <View style={styles.cartBadge}>
+        <TouchableOpacity style={styles.cartIcon} onPress={handleMenuPress}>
+          {/* <Text style={styles.cartIconText}>🛒</Text> */}
+          <Text style={styles.menuIconText}>☰</Text>
+
+          {/* <View style={styles.cartBadge}>
             <Text style={styles.cartBadgeText}>2</Text>
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
 
@@ -46,7 +59,7 @@ const MenuScreen = () => {
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <Text style={styles.searchIcon}>🔍</Text>
-          <Text style={styles.searchPlaceholder}>Search</Text>
+          <Text style={styles.searchPlaceholder}>Searchiii</Text>
         </View>
 
         {/* Categories */}

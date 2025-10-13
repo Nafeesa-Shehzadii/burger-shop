@@ -19,6 +19,21 @@ export const styles = StyleSheet.create({
     fontSize: moderateScale(28),
     fontWeight: 'bold',
     color: '#333',
+    flex: 1,
+    textAlign: 'center',
+  },
+  menuIcon: {
+    width: scale(50),
+    height: scale(50),
+    borderRadius: scale(25),
+    backgroundColor: '#FF6B6B',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  menuIconText: {
+    fontSize: moderateScale(24),
+    color: '#FFFFFF',
+    fontWeight: 'bold',
   },
   cartIcon: {
     position: 'relative',
