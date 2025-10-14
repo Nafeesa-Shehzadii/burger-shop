@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     flex: 1,
-    textAlign: 'center',
+    // textAlign: 'center',
   },
   menuIcon: {
     width: scale(50),
@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
   },
   searchPlaceholder: {
     fontSize: moderateScale(16),
-    color: '#999',
+    color: '#333',
   },
   categoriesContainer: {
     marginTop: verticalScale(20),

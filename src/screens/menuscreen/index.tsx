@@ -1,8 +1,17 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  TextInput,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { DrawerNavigationProp } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {
   RootStackParamList,
   DrawerParamList,
@@ -24,10 +33,34 @@ const MenuScreen = () => {
     drawerNavigation.openDrawer();
   };
   const categories = [
-    { id: '1', name: 'All', emoji: '🍔', color: '#FF6B6B' },
-    { id: '2', name: 'Burger', emoji: '🍔', color: '#4ECDC4' },
-    { id: '3', name: 'Pizza', emoji: '🍕', color: '#FFE66D' },
-    { id: '4', name: 'Drinks', emoji: '🥤', color: '#95E1D3' },
+    {
+      id: '1',
+      name: 'All',
+      icon: 'fast-food',
+      iconType: 'ionicon',
+      color: '#FF6B6B',
+    },
+    {
+      id: '2',
+      name: 'Burger',
+      icon: 'hamburger',
+      iconType: 'material',
+      color: '#4ECDC4',
+    },
+    {
+      id: '3',
+      name: 'Pizza',
+      icon: 'pizza',
+      iconType: 'ionicon',
+      color: '#FFE66D',
+    },
+    {
+      id: '4',
+      name: 'Drinks',
+      icon: 'beer',
+      iconType: 'ionicon',
+      color: '#95E1D3',
+    },
   ];
 
   const popularItems = [
@@ -46,20 +79,25 @@ const MenuScreen = () => {
         {/* <TouchableOpacity style={styles.menuIcon}></TouchableOpacity> */}
         <Text style={styles.headerTitle}>Menu</Text>
         <TouchableOpacity style={styles.cartIcon} onPress={handleMenuPress}>
-          {/* <Text style={styles.cartIconText}>🛒</Text> */}
-          <Text style={styles.menuIconText}>☰</Text>
-
-          {/* <View style={styles.cartBadge}>
-            <Text style={styles.cartBadgeText}>2</Text>
-          </View> */}
+          <Icon name="menu" size={28} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Search Bar */}
         <View style={styles.searchContainer}>
-          <Text style={styles.searchIcon}>🔍</Text>
-          <Text style={styles.searchPlaceholder}>Searchiii</Text>
+          <Icon
+            name="search"
+            size={20}
+            color="#999"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchPlaceholder}
+            placeholder="Search"
+            placeholderTextColor="#999"
+          />
+          {/* <Text style={styles.searchPlaceholder}>Search</Text> */}
         </View>
 
         {/* Categories */}
@@ -73,7 +111,15 @@ const MenuScreen = () => {
               key={category.id}
               style={[styles.categoryCard, { backgroundColor: category.color }]}
             >
-              <Text style={styles.categoryEmoji}>{category.emoji}</Text>
+              {category.iconType === 'ionicon' ? (
+                <Icon name={category.icon} size={32} color="#FFFFFF" />
+              ) : (
+                <MaterialCommunityIcons
+                  name={category.icon}
+                  size={32}
+                  color="#FFFFFF"
+                />
+              )}
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -90,7 +136,11 @@ const MenuScreen = () => {
               </Text>
             </View>
             <View style={styles.promotionImage}>
-              <Text style={styles.promotionEmoji}>🍟</Text>
+              <MaterialCommunityIcons
+                name="french-fries"
+                size={60}
+                color="#FF6B6B"
+              />
             </View>
           </View>
         </View>
@@ -105,14 +155,19 @@ const MenuScreen = () => {
               onPress={handleProductPress}
             >
               <View style={styles.itemImagePlaceholder}>
-                <Text style={styles.itemEmoji}>🍔</Text>
+                <MaterialCommunityIcons
+                  name="hamburger"
+                  size={40}
+                  color="#FF6B6B"
+                />
               </View>
               <View style={styles.itemInfo}>
                 <Text style={styles.itemName}>{item.name}</Text>
                 <Text style={styles.itemPrice}>{item.price}</Text>
               </View>
               <View style={styles.ratingBadge}>
-                <Text style={styles.ratingText}>⭐ {item.rating}</Text>
+                <Icon name="star" size={14} color="#FFD700" />
+                <Text style={styles.ratingText}> {item.rating}</Text>
               </View>
             </TouchableOpacity>
           ))}

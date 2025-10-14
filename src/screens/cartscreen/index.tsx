@@ -1,5 +1,17 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
+import type { MainTabParamList } from '../../navigation/types';
 import { styles } from './styles';
 
 type CartItem = {
@@ -7,17 +19,22 @@ type CartItem = {
   name: string;
   price: number;
   quantity: number;
-  emoji: string;
+  icon: string;
 };
 
 type Props = {
   onCheckout?: () => void;
+  handleMenuPress?: () => void;
 };
 
-const CartScreen = ({ onCheckout }: Props) => {
+type NavigationProp = BottomTabNavigationProp<MainTabParamList, 'Cart'>;
+
+const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
+  const navigation = useNavigation<NavigationProp>();
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [cartItems, setCartItems] = React.useState<CartItem[]>([
-    { id: '1', name: 'Beef Burger', price: 20, quantity: 1, emoji: '🍔' },
-    { id: '2', name: 'Noodles', price: 18, quantity: 2, emoji: '🍜' },
+    { id: '1', name: 'Beef Burger', price: 20, quantity: 1, icon: 'hamburger' },
+    { id: '2', name: 'Noodles', price: 18, quantity: 2, icon: 'noodles' },
   ]);
 
   const updateQuantity = (id: string, delta: number) => {
@@ -39,6 +56,33 @@ const CartScreen = ({ onCheckout }: Props) => {
   const deliveryFee = 5;
   const total = subtotal + deliveryFee;
 
+  const handleCheckout = () => {
+    if (cartItems.length === 0) {
+      return;
+    }
+    setShowCheckoutModal(true);
+    if (onCheckout) {
+      onCheckout();
+    }
+  };
+
+  const handleBackToMenu = () => {
+    navigation.navigate('Home');
+    if (handleMenuPress) {
+      handleMenuPress();
+    }
+  };
+
+  const handleConfirmOrder = () => {
+    setShowCheckoutModal(false);
+    // Clear cart after successful order
+    setCartItems([]);
+    // Navigate to home after a short delay
+    setTimeout(() => {
+      navigation.navigate('Home');
+    }, 500);
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -51,7 +95,11 @@ const CartScreen = ({ onCheckout }: Props) => {
         {cartItems.map(item => (
           <View key={item.id} style={styles.cartItem}>
             <View style={styles.itemImagePlaceholder}>
-              <Text style={styles.itemEmoji}>{item.emoji}</Text>
+              <MaterialCommunityIcons
+                name={item.icon}
+                size={40}
+                color="#FF6B6B"
+              />
             </View>
             <View style={styles.itemDetails}>
               <Text style={styles.itemName}>{item.name}</Text>
@@ -80,9 +128,11 @@ const CartScreen = ({ onCheckout }: Props) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Order Instructions:</Text>
           <View style={styles.instructionsBox}>
-            <Text style={styles.instructionsPlaceholder}>
-              Add special instructions...
-            </Text>
+            <TextInput
+              style={styles.instructionsPlaceholder}
+              placeholder="Add special instructions..."
+              placeholderTextColor="#999"
+            />
           </View>
         </View>
 
@@ -106,13 +156,75 @@ const CartScreen = ({ onCheckout }: Props) => {
 
       {/* Checkout Button */}
       <View style={styles.checkoutContainer}>
-        <TouchableOpacity style={styles.checkoutButton} onPress={onCheckout}>
+        <TouchableOpacity
+          style={[
+            styles.checkoutButton,
+            cartItems.length === 0 && styles.checkoutButtonDisabled,
+          ]}
+          onPress={handleCheckout}
+          disabled={cartItems.length === 0}
+        >
           <Text style={styles.checkoutText}>Checkout</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.backToMenuButton}>
+        <TouchableOpacity
+          style={styles.backToMenuButton}
+          onPress={handleBackToMenu}
+        >
           <Text style={styles.backToMenuText}>Back to Menu</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Checkout Modal */}
+      <Modal
+        visible={showCheckoutModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowCheckoutModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalIconContainer}>
+              <Icon name="checkmark-circle" size={80} color="#4CAF50" />
+            </View>
+
+            <Text style={styles.modalTitle}>Order Confirmed!</Text>
+            <Text style={styles.modalMessage}>
+              Your order has been placed successfully.
+            </Text>
+
+            <View style={styles.modalOrderSummary}>
+              <View style={styles.modalSummaryRow}>
+                <Text style={styles.modalSummaryLabel}>Items:</Text>
+                <Text style={styles.modalSummaryValue}>{cartItems.length}</Text>
+              </View>
+              <View style={styles.modalSummaryRow}>
+                <Text style={styles.modalSummaryLabel}>Total Amount:</Text>
+                <Text style={styles.modalSummaryValueBold}>${total}</Text>
+              </View>
+            </View>
+
+            <Text style={styles.modalDeliveryText}>
+              Estimated delivery: 30-45 minutes
+            </Text>
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={handleConfirmOrder}
+            >
+              <Text style={styles.modalButtonText}>Track Order</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modalButtonSecondary}
+              onPress={() => setShowCheckoutModal(false)}
+            >
+              <Text style={styles.modalButtonSecondaryText}>
+                Continue Shopping
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

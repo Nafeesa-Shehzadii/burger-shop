@@ -6,6 +6,8 @@ import {
   DrawerItemList,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomTabNavigator from './BottomTabNavigator';
 import type { DrawerParamList } from './types';
 
@@ -16,7 +18,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   return (
     <DrawerContentScrollView {...props} style={styles.drawerContainer}>
       <View style={styles.drawerHeader}>
-        <Text style={styles.drawerHeaderEmoji}>🍔</Text>
+        <Icon name="fast-food" size={48} color="#FFFFFF" style={styles.drawerHeaderIcon} />
         <Text style={styles.drawerHeaderTitle}>Burger Shop</Text>
         <Text style={styles.drawerHeaderSubtitle}>
           Delicious Burgers & More
@@ -27,32 +29,32 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <Text style={styles.menuSectionTitle}>MENU</Text>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>🏠</Text>
+          <Icon name="home" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>🍔</Text>
+          <MaterialCommunityIcons name="hamburger" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Burgers</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>🍕</Text>
+          <Icon name="pizza" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Pizza</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>🥤</Text>
+          <Icon name="beer" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Drinks</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>🍟</Text>
+          <MaterialCommunityIcons name="french-fries" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Sides</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>🍰</Text>
+          <Icon name="ice-cream" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Desserts</Text>
         </TouchableOpacity>
       </View>
@@ -61,22 +63,22 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <Text style={styles.menuSectionTitle}>ACCOUNT</Text>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>👤</Text>
+          <Icon name="person" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>My Profile</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>📦</Text>
+          <Icon name="receipt" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>My Orders</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>❤️</Text>
+          <Icon name="heart" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Favorites</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>📍</Text>
+          <Icon name="location" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Delivery Address</Text>
         </TouchableOpacity>
       </View>
@@ -85,24 +87,24 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <Text style={styles.menuSectionTitle}>SUPPORT</Text>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>💬</Text>
+          <Icon name="chatbubbles" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Help & Support</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>⚙️</Text>
+          <Icon name="settings" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>Settings</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemEmoji}>ℹ️</Text>
+          <Icon name="information-circle" size={20} color="#333" style={styles.menuItemIcon} />
           <Text style={styles.menuItemText}>About Us</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.logoutButton}>
-          <Text style={styles.logoutEmoji}>🚪</Text>
+          <Icon name="log-out" size={20} color="#FF6B6B" style={styles.logoutIcon} />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </View>
@@ -114,7 +116,6 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
-      useLegacyImplementation={false} // Use Reanimated 2+ for better performance
       screenOptions={{
         headerShown: false,
         drawerType: 'front',
@@ -138,8 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF6B6B',
     marginBottom: 10,
   },
-  drawerHeaderEmoji: {
-    fontSize: 48,
+  drawerHeaderIcon: {
     marginBottom: 10,
   },
   drawerHeaderTitle: {
@@ -171,8 +171,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
-  menuItemEmoji: {
-    fontSize: 20,
+  menuItemIcon: {
     marginRight: 15,
     width: 24,
   },
@@ -196,8 +195,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
   },
-  logoutEmoji: {
-    fontSize: 20,
+  logoutIcon: {
     marginRight: 10,
   },
   logoutText: {

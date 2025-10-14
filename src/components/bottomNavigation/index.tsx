@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
 
 type Tab = 'home' | 'search' | 'cart' | 'profile';
@@ -20,7 +21,7 @@ const BottomNav = ({ activeTab, onTabPress, cartCount = 0 }: Props) => {
             activeTab === 'home' && styles.activeIcon,
           ]}
         >
-          <Text style={styles.icon}>🏠</Text>
+          <Icon name="home" size={24} color={activeTab === 'home' ? '#FF6B6B' : '#999'} />
         </View>
         <View style={[styles.activeDot, activeTab !== 'home' && { opacity: 0 }]} />
       </TouchableOpacity>
@@ -32,7 +33,7 @@ const BottomNav = ({ activeTab, onTabPress, cartCount = 0 }: Props) => {
             activeTab === 'search' && styles.activeIcon,
           ]}
         >
-          <Text style={styles.icon}>🔍</Text>
+          <Icon name="search" size={24} color={activeTab === 'search' ? '#FF6B6B' : '#999'} />
         </View>
         <View style={[styles.activeDot, activeTab !== 'search' && { opacity: 0 }]} />
       </TouchableOpacity>
@@ -44,7 +45,7 @@ const BottomNav = ({ activeTab, onTabPress, cartCount = 0 }: Props) => {
             activeTab === 'cart' && styles.activeIcon,
           ]}
         >
-          <Text style={styles.icon}>🛒</Text>
+          <Icon name="cart" size={24} color={activeTab === 'cart' ? '#FF6B6B' : '#999'} />
           <View style={[styles.badge, cartCount === 0 && { opacity: 0 }]}>
             <Text style={styles.badgeText}>{cartCount || 0}</Text>
           </View>
@@ -62,7 +63,7 @@ const BottomNav = ({ activeTab, onTabPress, cartCount = 0 }: Props) => {
             activeTab === 'profile' && styles.activeIcon,
           ]}
         >
-          <Text style={styles.icon}>👤</Text>
+          <Icon name="person" size={24} color={activeTab === 'profile' ? '#FF6B6B' : '#999'} />
         </View>
         <View style={[styles.activeDot, activeTab !== 'profile' && { opacity: 0 }]} />
       </TouchableOpacity>
