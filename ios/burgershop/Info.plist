@@ -35,6 +35,12 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need camera access to let you take photos of your burgers for reviews</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to let you share burger photos in reviews</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to save burger photos to your library</string>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
 	<key>UIRequiredDeviceCapabilities</key>

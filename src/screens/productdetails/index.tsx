@@ -100,9 +100,17 @@ const ProductDetailsScreen = () => {
         >
           <Icon name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.favoriteButton}>
-          <Icon name="heart-outline" size={24} color="#FF6B6B" />
-        </TouchableOpacity>
+        <View style={styles.headerRight}>
+          <TouchableOpacity
+            style={styles.reviewButton}
+            onPress={() => navigation.navigate('Review', { item })}
+          >
+            <Icon name="camera-outline" size={24} color="#FF6B6B" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.favoriteButton}>
+            <Icon name="heart-outline" size={24} color="#FF6B6B" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>

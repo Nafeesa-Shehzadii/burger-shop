@@ -26,7 +26,19 @@ export const styles = StyleSheet.create({
     fontSize: moderateScale(24),
     color: '#FFFFFF',
   },
+  headerRight: {
+    flexDirection: 'row',
+    gap: scale(10),
+  },
   favoriteButton: {
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  reviewButton: {
     width: scale(40),
     height: scale(40),
     borderRadius: scale(20),

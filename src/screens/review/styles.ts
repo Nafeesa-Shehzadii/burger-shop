@@ -1,0 +1,157 @@
+import { StyleSheet } from 'react-native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#3D5CFF',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: scale(20),
+    paddingTop: verticalScale(50),
+    paddingBottom: verticalScale(20),
+  },
+  backButton: {
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: moderateScale(20),
+    fontWeight: 'bold',
+    color: '#FFF',
+  },
+  placeholder: {
+    width: scale(40),
+  },
+  content: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: moderateScale(30),
+    borderTopRightRadius: moderateScale(30),
+    paddingHorizontal: scale(20),
+    paddingTop: verticalScale(25),
+  },
+  productInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: verticalScale(30),
+    padding: scale(15),
+    backgroundColor: '#F8F8F8',
+    borderRadius: moderateScale(15),
+  },
+  productImage: {
+    width: scale(70),
+    height: scale(70),
+    borderRadius: scale(35),
+  },
+  productImagePlaceholder: {
+    width: scale(70),
+    height: scale(70),
+    borderRadius: scale(35),
+    backgroundColor: '#E0E0E0',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  productDetails: {
+    flex: 1,
+    marginLeft: scale(15),
+  },
+  productName: {
+    fontSize: moderateScale(18),
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: verticalScale(5),
+  },
+  restaurantName: {
+    fontSize: moderateScale(14),
+    color: '#666',
+  },
+  section: {
+    marginBottom: verticalScale(30),
+  },
+  sectionTitle: {
+    fontSize: moderateScale(18),
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: verticalScale(15),
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: scale(10),
+  },
+  starButton: {
+    padding: scale(5),
+  },
+  reviewInput: {
+    backgroundColor: '#F8F8F8',
+    borderRadius: moderateScale(15),
+    padding: scale(15),
+    fontSize: moderateScale(16),
+    color: '#333',
+    minHeight: verticalScale(150),
+  },
+  photosContainer: {
+    flexDirection: 'row',
+    gap: scale(15),
+  },
+  addPhotoButton: {
+    width: scale(120),
+    height: scale(120),
+    borderRadius: moderateScale(15),
+    borderWidth: 2,
+    borderColor: '#FF6B6B',
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFF',
+  },
+  addPhotoText: {
+    marginTop: verticalScale(8),
+    fontSize: moderateScale(14),
+    color: '#FF6B6B',
+    fontWeight: '600',
+  },
+  photoPreview: {
+    width: scale(120),
+    height: scale(120),
+    borderRadius: moderateScale(15),
+    position: 'relative',
+  },
+  photoImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: moderateScale(15),
+  },
+  removePhotoButton: {
+    position: 'absolute',
+    top: -verticalScale(8),
+    right: -scale(8),
+    backgroundColor: '#FFF',
+    borderRadius: scale(12),
+  },
+  submitButton: {
+    backgroundColor: '#3D5CFF',
+    paddingVertical: verticalScale(16),
+    borderRadius: moderateScale(25),
+    alignItems: 'center',
+    marginBottom: verticalScale(30),
+    shadowColor: '#3D5CFF',
+    shadowOffset: { width: 0, height: verticalScale(4) },
+    shadowOpacity: 0.3,
+    shadowRadius: moderateScale(8),
+    elevation: 5,
+  },
+  submitButtonText: {
+    color: '#FFF',
+    fontSize: moderateScale(18),
+    fontWeight: 'bold',
+  },
+});

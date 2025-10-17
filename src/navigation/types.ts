@@ -13,6 +13,7 @@ export interface MenuItem {
 export type RootStackParamList = {
   DrawerNav: NavigatorScreenParams<DrawerParamList>;
   ProductDetails: { item: MenuItem };
+  Review: { item: MenuItem };
 };
 
 export type DrawerParamList = {
