@@ -1,9 +1,18 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
+export interface MenuItem {
+  itemID: number;
+  itemName: string;
+  itemDescription: string;
+  itemPrice: number;
+  imageUrl: string;
+  restaurantID: number;
+  restaurantName: string;
+}
+
 export type RootStackParamList = {
-  Splash: undefined;
   DrawerNav: NavigatorScreenParams<DrawerParamList>;
-  ProductDetails: undefined;
+  ProductDetails: { item: MenuItem };
 };
 
 export type DrawerParamList = {

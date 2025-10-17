@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
   },
   ratingContainer: {
     alignItems: 'flex-end',
-    marginBottom: verticalScale(10),
+    marginBottom: verticalScale(20),
   },
   ratingBadge: {
     backgroundColor: '#3D5CFF',
@@ -192,5 +192,29 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: moderateScale(18),
     fontWeight: 'bold',
+  },
+  productImage: {
+    width: scale(250),
+    height: scale(250),
+    borderRadius: scale(125),
+  },
+  restaurantName: {
+    fontSize: moderateScale(14),
+    color: '#999',
+    marginBottom: verticalScale(8),
+  },
+  noImageContainer: {
+    width: scale(250),
+    height: scale(250),
+    borderRadius: scale(125),
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noImageText: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: moderateScale(14),
+    marginTop: verticalScale(10),
+    fontWeight: '600',
   },
 });

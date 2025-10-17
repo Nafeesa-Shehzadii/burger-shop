@@ -200,4 +200,28 @@ export const styles = StyleSheet.create({
     fontSize: moderateScale(12),
     fontWeight: '600',
   },
+  loadingText: {
+    fontSize: moderateScale(16),
+    color: '#999',
+    textAlign: 'center',
+    marginTop: verticalScale(20),
+  },
+  itemImage: {
+    width: scale(70),
+    height: scale(70),
+    borderRadius: moderateScale(12),
+  },
+  restaurantName: {
+    fontSize: moderateScale(12),
+    color: '#999',
+    marginTop: verticalScale(3),
+  },
+  noImagePlaceholder: {
+    width: scale(70),
+    height: scale(70),
+    backgroundColor: '#F5F5F5',
+    borderRadius: moderateScale(12),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

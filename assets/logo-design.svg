@@ -1,0 +1,30 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="600" cy="600" r="500" fill="#3D5CFF"/>
+  
+  <!-- Burger Icon -->
+  <!-- Top Bun -->
+  <path d="M 400 450 Q 600 400 800 450 L 780 500 Q 600 470 420 500 Z" fill="#FFB800"/>
+  <ellipse cx="600" cy="455" rx="200" ry="30" fill="#FFC933"/>
+  
+  <!-- Lettuce -->
+  <path d="M 420 500 L 780 500 L 770 530 L 430 530 Z" fill="#4CAF50"/>
+  
+  <!-- Cheese -->
+  <path d="M 430 530 L 770 530 L 760 560 L 440 560 Z" fill="#FFD700"/>
+  
+  <!-- Patty -->
+  <path d="M 440 560 L 760 560 L 750 610 L 450 610 Z" fill="#8B4513"/>
+  
+  <!-- Tomato -->
+  <ellipse cx="520" cy="625" rx="40" ry="20" fill="#FF6B6B"/>
+  <ellipse cx="680" cy="625" rx="40" ry="20" fill="#FF6B6B"/>
+  
+  <!-- Bottom Bun -->
+  <path d="M 450 610 L 750 610 L 740 660 L 460 660 Z" fill="#FFB800"/>
+  <ellipse cx="600" cy="660" rx="140" ry="25" fill="#E69500"/>
+  
+  <!-- Text -->
+  <text x="600" y="780" font-family="Arial, sans-serif" font-size="120" font-weight="bold" fill="#FFFFFF" text-anchor="middle">BURGER</text>
+  <text x="600" y="870" font-family="Arial, sans-serif" font-size="80" font-weight="600" fill="#FFB800" text-anchor="middle">SHOP</text>
+</svg>

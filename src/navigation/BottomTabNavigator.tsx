@@ -4,23 +4,27 @@ import MenuScreen from '../screens/menuscreen';
 import CartScreen from '../screens/cartscreen';
 import BottomNav from '../components/bottomNavigation';
 import type { MainTabParamList } from './types';
+import { useAppSelector } from '../store/hooks';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const BottomTabNavigator = () => {
+  const cartItems = useAppSelector(state => state.cart.items);
+  const cartCount = cartItems?.length || 0;
   return (
     <Tab.Navigator
-      tabBar={(props) => {
+      tabBar={props => {
         const activeRoute = props.state.routes[props.state.index].name;
-        const activeTab = activeRoute.toLowerCase() as 'home' | 'search' | 'cart' | 'profile';
-        
-        // Count cart items (you can pass this as context or props later)
-        const cartCount = 2;
+        const activeTab = activeRoute.toLowerCase() as
+          | 'home'
+          | 'search'
+          | 'cart'
+          | 'profile';
 
         return (
           <BottomNav
             activeTab={activeTab}
-            onTabPress={(tab) => {
+            onTabPress={tab => {
               const routeMap: Record<string, keyof MainTabParamList> = {
                 home: 'Home',
                 search: 'Search',

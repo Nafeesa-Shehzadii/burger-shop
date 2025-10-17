@@ -149,8 +149,8 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: scale(20),
     paddingVertical: verticalScale(15),
-    paddingBottom: verticalScale(90),
-    borderTopWidth: 1,
+    paddingBottom: verticalScale(80),
+    // borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
   },
   checkoutButton: {
@@ -272,5 +272,32 @@ export const styles = StyleSheet.create({
     color: '#3D5CFF',
     fontSize: moderateScale(16),
     fontWeight: '600',
+  },
+  emptyCart: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: verticalScale(80),
+  },
+  emptyCartText: {
+    fontSize: moderateScale(18),
+    fontWeight: '600',
+    color: '#666',
+    marginTop: verticalScale(20),
+  },
+  emptyCartSubtext: {
+    fontSize: moderateScale(14),
+    color: '#999',
+    marginTop: verticalScale(8),
+  },
+  itemImage: {
+    width: scale(60),
+    height: scale(60),
+    borderRadius: moderateScale(12),
+  },
+  addOnsText: {
+    fontSize: moderateScale(11),
+    color: '#999',
+    marginTop: verticalScale(3),
+    fontStyle: 'italic',
   },
 });

@@ -1,0 +1,54 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Burger Shop Logo Template -->
+  <!-- Background Circle (Optional) -->
+  <circle cx="512" cy="512" r="480" fill="#FFFFFF" opacity="0.1"/>
+  
+  <!-- Burger Icon -->
+  <!-- Top Bun -->
+  <path d="M 312 380 Q 312 340 362 320 L 662 320 Q 712 340 712 380 L 712 420 L 312 420 Z" fill="#FFB800" stroke="#D69500" stroke-width="8"/>
+  <ellipse cx="400" cy="360" rx="20" ry="12" fill="#E6A600"/>
+  <ellipse cx="520" cy="355" rx="18" ry="10" fill="#E6A600"/>
+  <ellipse cx="630" cy="365" rx="22" ry="13" fill="#E6A600"/>
+  
+  <!-- Lettuce -->
+  <path d="M 320 420 L 340 450 L 360 440 L 380 460 L 400 445 L 420 465 L 440 450 L 460 470 L 480 455 L 500 475 L 520 460 L 540 480 L 560 465 L 580 485 L 600 470 L 620 490 L 640 475 L 660 495 L 680 480 L 704 500 L 320 500 Z" fill="#4CAF50"/>
+  
+  <!-- Cheese -->
+  <rect x="315" y="500" width="394" height="35" fill="#FFD54F"/>
+  <path d="M 315 500 L 335 535 L 355 500" fill="#FFC107"/>
+  <path d="M 375 500 L 395 535 L 415 500" fill="#FFC107"/>
+  <path d="M 435 500 L 455 535 L 475 500" fill="#FFC107"/>
+  <path d="M 495 500 L 515 535 L 535 500" fill="#FFC107"/>
+  <path d="M 555 500 L 575 535 L 595 500" fill="#FFC107"/>
+  <path d="M 615 500 L 635 535 L 655 500" fill="#FFC107"/>
+  <path d="M 675 500 L 695 535 L 709 500" fill="#FFC107"/>
+  
+  <!-- Patty -->
+  <ellipse cx="512" cy="565" rx="200" ry="40" fill="#8B4513"/>
+  <ellipse cx="512" cy="560" rx="200" ry="38" fill="#A0522D"/>
+  <!-- Grill marks -->
+  <line x1="380" y1="555" x2="390" y2="570" stroke="#6B3410" stroke-width="3"/>
+  <line x1="430" y1="550" x2="440" y2="565" stroke="#6B3410" stroke-width="3"/>
+  <line x1="480" y1="548" x2="490" y2="563" stroke="#6B3410" stroke-width="3"/>
+  <line x1="530" y1="548" x2="540" y2="563" stroke="#6B3410" stroke-width="3"/>
+  <line x1="580" y1="550" x2="590" y2="565" stroke="#6B3410" stroke-width="3"/>
+  <line x1="630" y1="555" x2="640" y2="570" stroke="#6B3410" stroke-width="3"/>
+  
+  <!-- Tomato -->
+  <ellipse cx="512" cy="610" rx="190" ry="25" fill="#FF6B6B"/>
+  <ellipse cx="450" cy="608" rx="30" ry="8" fill="#FF5252" opacity="0.6"/>
+  <ellipse cx="574" cy="608" rx="30" ry="8" fill="#FF5252" opacity="0.6"/>
+  
+  <!-- Bottom Bun -->
+  <ellipse cx="512" cy="650" rx="200" ry="45" fill="#FFB800"/>
+  <ellipse cx="512" cy="645" rx="200" ry="40" fill="#FFC107"/>
+  <!-- Sesame seeds on bottom -->
+  <ellipse cx="420" cy="640" rx="8" ry="5" fill="#FFFFFF" opacity="0.8"/>
+  <ellipse cx="480" cy="635" rx="7" ry="4" fill="#FFFFFF" opacity="0.8"/>
+  <ellipse cx="544" cy="637" rx="8" ry="5" fill="#FFFFFF" opacity="0.8"/>
+  <ellipse cx="604" cy="642" rx="7" ry="4" fill="#FFFFFF" opacity="0.8"/>
+  
+  <!-- Text (Optional - remove if you want icon only) -->
+  <text x="512" y="750" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#FFFFFF" text-anchor="middle">BURGER</text>
+  <text x="512" y="820" font-family="Arial, sans-serif" font-size="56" font-weight="600" fill="#FFB800" text-anchor="middle">SHOP</text>
+</svg>

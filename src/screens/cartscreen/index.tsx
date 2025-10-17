@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -13,14 +14,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Icon from 'react-native-vector-icons/Ionicons';
 import type { MainTabParamList } from '../../navigation/types';
 import { styles } from './styles';
-
-type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  icon: string;
-};
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { updateQuantity, removeFromCart, clearCart } from '../../store/cartSlice';
 
 type Props = {
   onCheckout?: () => void;
@@ -32,28 +27,27 @@ type NavigationProp = BottomTabNavigationProp<MainTabParamList, 'Cart'>;
 const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
   const navigation = useNavigation<NavigationProp>();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
-  const [cartItems, setCartItems] = React.useState<CartItem[]>([
-    { id: '1', name: 'Beef Burger', price: 20, quantity: 1, icon: 'hamburger' },
-    { id: '2', name: 'Noodles', price: 18, quantity: 2, icon: 'noodles' },
-  ]);
+  const cartItems = useAppSelector(state => state.cart.items);
+  const dispatch = useAppDispatch();
 
-  const updateQuantity = (id: string, delta: number) => {
-    setCartItems(
-      cartItems
-        .map(item =>
-          item.id === id
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item,
-        )
-        .filter(item => item.quantity > 0),
-    );
+  const handleUpdateQuantity = (itemID: number, delta: number) => {
+    const item = cartItems.find(i => i.itemID === itemID);
+    if (!item) return;
+
+    const newQuantity = item.quantity + delta;
+    
+    if (newQuantity <= 0) {
+      dispatch(removeFromCart(itemID));
+    } else {
+      dispatch(updateQuantity({ itemID, quantity: newQuantity }));
+    }
   };
 
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.itemPrice * item.quantity,
     0,
   );
-  const deliveryFee = 5;
+  const deliveryFee = 50;
   const total = subtotal + deliveryFee;
 
   const handleCheckout = () => {
@@ -76,7 +70,7 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
   const handleConfirmOrder = () => {
     setShowCheckoutModal(false);
     // Clear cart after successful order
-    setCartItems([]);
+    dispatch(clearCart());
     // Navigate to home after a short delay
     setTimeout(() => {
       navigation.navigate('Home');
@@ -92,37 +86,61 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Cart Items */}
-        {cartItems.map(item => (
-          <View key={item.id} style={styles.cartItem}>
-            <View style={styles.itemImagePlaceholder}>
-              <MaterialCommunityIcons
-                name={item.icon}
-                size={40}
-                color="#FF6B6B"
-              />
-            </View>
-            <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.price}</Text>
-              <Text style={styles.itemQuantity}>{item.quantity}</Text>
-            </View>
-            <View style={styles.quantityControls}>
-              <TouchableOpacity
-                style={styles.quantityButton}
-                onPress={() => updateQuantity(item.id, -1)}
-              >
-                <Text style={styles.quantityButtonText}>−</Text>
-              </TouchableOpacity>
-              <Text style={styles.quantityText}>{item.quantity}</Text>
-              <TouchableOpacity
-                style={styles.quantityButton}
-                onPress={() => updateQuantity(item.id, 1)}
-              >
-                <Text style={styles.quantityButtonText}>+</Text>
-              </TouchableOpacity>
-            </View>
+        {cartItems.length === 0 ? (
+          <View style={styles.emptyCart}>
+            <MaterialCommunityIcons
+              name="cart-outline"
+              size={80}
+              color="#CCC"
+            />
+            <Text style={styles.emptyCartText}>Your cart is empty</Text>
+            <Text style={styles.emptyCartSubtext}>Add items to get started</Text>
           </View>
-        ))}
+        ) : (
+          cartItems.map(item => (
+            <View key={item.itemID} style={styles.cartItem}>
+              {item.imageUrl ? (
+                <Image
+                  source={{ uri: item.imageUrl }}
+                  style={styles.itemImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View style={styles.itemImagePlaceholder}>
+                  <MaterialCommunityIcons
+                    name="image-off"
+                    size={30}
+                    color="#999"
+                  />
+                </View>
+              )}
+              <View style={styles.itemDetails}>
+                <Text style={styles.itemName}>{item.itemName}</Text>
+                <Text style={styles.itemPrice}>Rs. {item.itemPrice}</Text>
+                {item.selectedAddOns && item.selectedAddOns.length > 0 && (
+                  <Text style={styles.addOnsText}>
+                    Add-ons: {item.selectedAddOns.join(', ')}
+                  </Text>
+                )}
+              </View>
+              <View style={styles.quantityControls}>
+                <TouchableOpacity
+                  style={styles.quantityButton}
+                  onPress={() => handleUpdateQuantity(item.itemID, -1)}
+                >
+                  <Text style={styles.quantityButtonText}>−</Text>
+                </TouchableOpacity>
+                <Text style={styles.quantityText}>{item.quantity}</Text>
+                <TouchableOpacity
+                  style={styles.quantityButton}
+                  onPress={() => handleUpdateQuantity(item.itemID, 1)}
+                >
+                  <Text style={styles.quantityButtonText}>+</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        )}
 
         {/* Order Instructions */}
         <View style={styles.section}>
@@ -140,16 +158,16 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
         <View style={styles.summarySection}>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Subtotal:</Text>
-            <Text style={styles.summaryValue}>${subtotal}</Text>
+            <Text style={styles.summaryValue}>Rs. {subtotal}</Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Delivery Fee:</Text>
-            <Text style={styles.summaryValue}>${deliveryFee}</Text>
+            <Text style={styles.summaryValue}>Rs. {deliveryFee}</Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.summaryRow}>
             <Text style={styles.totalLabel}>TOTAL:</Text>
-            <Text style={styles.totalValue}>${total}</Text>
+            <Text style={styles.totalValue}>Rs. {total}</Text>
           </View>
         </View>
       </ScrollView>
@@ -199,7 +217,7 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
               </View>
               <View style={styles.modalSummaryRow}>
                 <Text style={styles.modalSummaryLabel}>Total Amount:</Text>
-                <Text style={styles.modalSummaryValueBold}>${total}</Text>
+                <Text style={styles.modalSummaryValueBold}>Rs. {total}</Text>
               </View>
             </View>
 

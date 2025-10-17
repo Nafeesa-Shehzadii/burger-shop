@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -15,6 +16,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import type {
   RootStackParamList,
   DrawerParamList,
+  MenuItem,
 } from '../../navigation/types';
 import { styles } from './styles';
 
@@ -24,14 +26,19 @@ type DrawerNavProp = DrawerNavigationProp<DrawerParamList>;
 const MenuScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const drawerNavigation = useNavigation<DrawerNavProp>();
+  const [popularItems, setPopularItems] = useState<MenuItem[]>([]);
+  const [originalItems, setOriginalItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleProductPress = () => {
-    navigation.navigate('ProductDetails');
+  const handleProductPress = (item: MenuItem) => {
+    navigation.navigate('ProductDetails', { item });
   };
 
   const handleMenuPress = () => {
     drawerNavigation.openDrawer();
   };
+
   const categories = [
     {
       id: '1',
@@ -63,20 +70,61 @@ const MenuScreen = () => {
     },
   ];
 
-  const popularItems = [
-    { id: '1', name: 'Beef Burger', price: '$20', rating: 4.8 },
-    { id: '2', name: 'Cheese Burger', price: '$18', rating: 4.6 },
-    { id: '3', name: 'Chicken Burger', price: '$15', rating: 4.7 },
-    { id: '4', name: 'coca cola', price: '$20', rating: 4.8 },
-    { id: '5', name: 'sandwitch', price: '$18', rating: 4.6 },
-    { id: '6', name: 'Chicken Burger', price: '$15', rating: 4.7 },
-  ];
+  useEffect(() => {
+    fetch('https://fakerestaurantapi.runasp.net/api/Restaurant/items')
+      .then(res => res.json())
+      .then((json: MenuItem[]) => {
+        setPopularItems(json);
+        setOriginalItems(json);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching items:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setPopularItems(originalItems);
+    } else {
+      const filteredItems = originalItems.filter(item =>
+        item.itemName.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+      setPopularItems(filteredItems);
+    }
+  }, [searchQuery, originalItems]);
+
+  const renderItem = ({ item }: { item: MenuItem }) => (
+    <TouchableOpacity
+      style={styles.itemCard}
+      onPress={() => handleProductPress(item)}
+    >
+      {item.imageUrl ? (
+        <Image
+          source={{ uri: item.imageUrl }}
+          style={styles.itemImage}
+          resizeMode="cover"
+        />
+      ) : (
+        <View style={styles.noImagePlaceholder}>
+          <MaterialCommunityIcons name="image-off" size={30} color="#999" />
+        </View>
+      )}
+      <View style={styles.itemInfo}>
+        <Text style={styles.itemName}>{item.itemName}</Text>
+        <Text style={styles.itemPrice}>Rs. {item.itemPrice}</Text>
+        <Text style={styles.restaurantName} numberOfLines={1}>
+          {item.restaurantName}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        {/* <TouchableOpacity style={styles.menuIcon}></TouchableOpacity> */}
         <Text style={styles.headerTitle}>Menu</Text>
         <TouchableOpacity style={styles.cartIcon} onPress={handleMenuPress}>
           <Icon name="menu" size={28} color="#FFFFFF" />
@@ -96,8 +144,9 @@ const MenuScreen = () => {
             style={styles.searchPlaceholder}
             placeholder="Search"
             placeholderTextColor="#999"
+            onChangeText={text => setSearchQuery(text)}
+            value={searchQuery}
           />
-          {/* <Text style={styles.searchPlaceholder}>Search</Text> */}
         </View>
 
         {/* Categories */}
@@ -148,29 +197,17 @@ const MenuScreen = () => {
         {/* Popular Items */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Popular</Text>
-          {popularItems.map(item => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.itemCard}
-              onPress={handleProductPress}
-            >
-              <View style={styles.itemImagePlaceholder}>
-                <MaterialCommunityIcons
-                  name="hamburger"
-                  size={40}
-                  color="#FF6B6B"
-                />
-              </View>
-              <View style={styles.itemInfo}>
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.itemPrice}>{item.price}</Text>
-              </View>
-              <View style={styles.ratingBadge}>
-                <Icon name="star" size={14} color="#FFD700" />
-                <Text style={styles.ratingText}> {item.rating}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+          {loading ? (
+            <Text style={styles.loadingText}>Loading...</Text>
+          ) : (
+            <FlatList
+              data={popularItems}
+              renderItem={renderItem}
+              keyExtractor={item => item.itemID.toString()}
+              scrollEnabled={false} // because parent ScrollView handles scroll
+              showsVerticalScrollIndicator={false}
+            />
+          )}
         </View>
       </ScrollView>
     </View>
