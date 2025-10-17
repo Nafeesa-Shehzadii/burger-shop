@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -10,18 +10,47 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomTabNavigator from './BottomTabNavigator';
 import type { DrawerParamList } from './types';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { logoutUser } from '../store/authSlice';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 // Custom Drawer Content for Burger Shop
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.auth.user);
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: () => dispatch(logoutUser()),
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+
   return (
     <DrawerContentScrollView {...props} style={styles.drawerContainer}>
       <View style={styles.drawerHeader}>
-        <Icon name="fast-food" size={48} color="#FFFFFF" style={styles.drawerHeaderIcon} />
+        <Icon
+          name="fast-food"
+          size={48}
+          color="#FFFFFF"
+          style={styles.drawerHeaderIcon}
+        />
         <Text style={styles.drawerHeaderTitle}>Burger Shop</Text>
         <Text style={styles.drawerHeaderSubtitle}>
-          Delicious Burgers & More
+          {user?.name || 'Welcome!'}
         </Text>
       </View>
 
@@ -29,32 +58,62 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <Text style={styles.menuSectionTitle}>MENU</Text>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="home" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="home"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <MaterialCommunityIcons name="hamburger" size={20} color="#333" style={styles.menuItemIcon} />
+          <MaterialCommunityIcons
+            name="hamburger"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Burgers</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="pizza" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="pizza"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Pizza</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="beer" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="beer"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Drinks</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <MaterialCommunityIcons name="french-fries" size={20} color="#333" style={styles.menuItemIcon} />
+          <MaterialCommunityIcons
+            name="french-fries"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Sides</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="ice-cream" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="ice-cream"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Desserts</Text>
         </TouchableOpacity>
       </View>
@@ -63,22 +122,42 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <Text style={styles.menuSectionTitle}>ACCOUNT</Text>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="person" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="person"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>My Profile</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="receipt" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="receipt"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>My Orders</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="heart" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="heart"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Favorites</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="location" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="location"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Delivery Address</Text>
         </TouchableOpacity>
       </View>
@@ -87,24 +166,44 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <Text style={styles.menuSectionTitle}>SUPPORT</Text>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="chatbubbles" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="chatbubbles"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Help & Support</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="settings" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="settings"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>Settings</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Icon name="information-circle" size={20} color="#333" style={styles.menuItemIcon} />
+          <Icon
+            name="information-circle"
+            size={20}
+            color="#333"
+            style={styles.menuItemIcon}
+          />
           <Text style={styles.menuItemText}>About Us</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.logoutButton}>
-          <Icon name="log-out" size={20} color="#FF6B6B" style={styles.logoutIcon} />
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Icon
+            name="log-out"
+            size={20}
+            color="#FF6B6B"
+            style={styles.logoutIcon}
+          />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </View>

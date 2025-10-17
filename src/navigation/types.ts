@@ -11,9 +11,16 @@ export interface MenuItem {
 }
 
 export type RootStackParamList = {
+  Auth: NavigatorScreenParams<AuthStackParamList>;
   DrawerNav: NavigatorScreenParams<DrawerParamList>;
   ProductDetails: { item: MenuItem };
   Review: { item: MenuItem };
+};
+
+export type AuthStackParamList = {
+  Welcome: undefined;
+  Login: undefined;
+  Signup: undefined;
 };
 
 export type DrawerParamList = {
