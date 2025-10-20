@@ -146,6 +146,12 @@ const MenuScreen = () => {
             placeholderTextColor="#999"
             onChangeText={text => setSearchQuery(text)}
             value={searchQuery}
+            keyboardType="default"
+            returnKeyType="search"
+            autoCorrect={false}
+            clearButtonMode="while-editing"
+            editable={true}
+            selectTextOnFocus={true}
           />
         </View>
 

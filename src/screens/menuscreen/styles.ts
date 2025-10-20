@@ -78,8 +78,11 @@ export const styles = StyleSheet.create({
     marginRight: scale(10),
   },
   searchPlaceholder: {
+    flex: 1,
     fontSize: moderateScale(16),
     color: '#333',
+    minHeight: verticalScale(40),
+    padding: 0,
   },
   categoriesContainer: {
     marginTop: verticalScale(20),
