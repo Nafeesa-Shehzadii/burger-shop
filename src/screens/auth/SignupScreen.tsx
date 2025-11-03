@@ -16,7 +16,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../navigation/types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useAppDispatch } from '../../store/hooks';
-import { signupUser } from '../../store/authSlice';
+import { signupUser, googleSignIn } from '../../store/authSlice';
 import { styles } from './styles';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Signup'>;
@@ -61,6 +61,16 @@ const SignupScreen = () => {
 
     if (!result.success) {
       Alert.alert('Signup Failed', result.error || 'Please try again');
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    const result = await dispatch(googleSignIn());
+    setIsLoading(false);
+
+    if (!result.success) {
+      Alert.alert('Google Sign-In Failed', result.error || 'Please try again');
     }
   };
 
@@ -217,6 +227,23 @@ const SignupScreen = () => {
             ) : (
               <Text style={styles.primaryButtonText}>Sign Up</Text>
             )}
+          </TouchableOpacity>
+
+          {/* Divider */}
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>OR</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Google Sign-In Button */}
+          <TouchableOpacity
+            style={[styles.googleButton, isLoading && styles.disabledButton]}
+            onPress={handleGoogleSignIn}
+            disabled={isLoading}
+          >
+            <Icon name="logo-google" size={20} color="#DB4437" />
+            <Text style={styles.googleButtonText}>Continue with Google</Text>
           </TouchableOpacity>
 
           {/* Login Link */}
