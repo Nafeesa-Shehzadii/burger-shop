@@ -7,15 +7,22 @@ import {
   Modal,
   TextInput,
   Image,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
+import auth from '@react-native-firebase/auth';
 import type { MainTabParamList } from '../../navigation/types';
 import { styles } from './styles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { updateQuantity, removeFromCart, clearCart } from '../../store/cartSlice';
+import {
+  updateQuantity,
+  removeFromCart,
+  clearCart,
+} from '../../store/cartSlice';
+import { createOrder } from '../../services/firebaseService';
 
 type Props = {
   onCheckout?: () => void;
@@ -27,6 +34,9 @@ type NavigationProp = BottomTabNavigationProp<MainTabParamList, 'Cart'>;
 const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
   const navigation = useNavigation<NavigationProp>();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState('');
+  const [isProcessingOrder, setIsProcessingOrder] = useState(false);
   const cartItems = useAppSelector(state => state.cart.items);
   const dispatch = useAppDispatch();
 
@@ -35,7 +45,7 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
     if (!item) return;
 
     const newQuantity = item.quantity + delta;
-    
+
     if (newQuantity <= 0) {
       dispatch(removeFromCart(itemID));
     } else {
@@ -67,14 +77,58 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
     }
   };
 
-  const handleConfirmOrder = () => {
-    setShowCheckoutModal(false);
-    // Clear cart after successful order
-    dispatch(clearCart());
-    // Navigate to home after a short delay
-    setTimeout(() => {
-      navigation.navigate('Home');
-    }, 500);
+  const handleConfirmOrder = async () => {
+    const user = auth().currentUser;
+
+    if (!user) {
+      Alert.alert('Error', 'You must be logged in to place an order');
+      setShowCheckoutModal(false);
+      return;
+    }
+
+    setIsProcessingOrder(true);
+
+    try {
+      // Create order in Firebase
+      const orderId = await createOrder(
+        user.uid,
+        user.email || 'No email',
+        cartItems,
+        deliveryAddress || 'Default delivery address',
+        specialInstructions,
+      );
+
+      console.log('Order created successfully with ID:', orderId);
+
+      // Clear cart after successful order
+      dispatch(clearCart());
+
+      // Reset form fields
+      setDeliveryAddress('');
+      setSpecialInstructions('');
+
+      // Close modal and navigate
+      setShowCheckoutModal(false);
+
+      Alert.alert(
+        'Order Placed!',
+        `Your order #${orderId.substring(0, 8)} has been placed successfully.`,
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Home'),
+          },
+        ],
+      );
+    } catch (error) {
+      console.error('Error creating order:', error);
+      Alert.alert(
+        'Order Failed',
+        'Failed to place your order. Please try again.',
+      );
+    } finally {
+      setIsProcessingOrder(false);
+    }
   };
 
   return (
@@ -94,7 +148,9 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
               color="#CCC"
             />
             <Text style={styles.emptyCartText}>Your cart is empty</Text>
-            <Text style={styles.emptyCartSubtext}>Add items to get started</Text>
+            <Text style={styles.emptyCartSubtext}>
+              Add items to get started
+            </Text>
           </View>
         ) : (
           cartItems.map(item => (
@@ -142,6 +198,21 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
           ))
         )}
 
+        {/* Delivery Address */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Delivery Address:</Text>
+          <View style={styles.instructionsBox}>
+            <TextInput
+              style={styles.instructionsPlaceholder}
+              placeholder="Enter your delivery address..."
+              placeholderTextColor="#999"
+              value={deliveryAddress}
+              onChangeText={setDeliveryAddress}
+              multiline
+            />
+          </View>
+        </View>
+
         {/* Order Instructions */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Order Instructions:</Text>
@@ -150,6 +221,9 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
               style={styles.instructionsPlaceholder}
               placeholder="Add special instructions..."
               placeholderTextColor="#999"
+              value={specialInstructions}
+              onChangeText={setSpecialInstructions}
+              multiline
             />
           </View>
         </View>
@@ -226,10 +300,16 @@ const CartScreen = ({ onCheckout, handleMenuPress }: Props) => {
             </Text>
 
             <TouchableOpacity
-              style={styles.modalButton}
+              style={[
+                styles.modalButton,
+                isProcessingOrder && { opacity: 0.6 },
+              ]}
               onPress={handleConfirmOrder}
+              disabled={isProcessingOrder}
             >
-              <Text style={styles.modalButtonText}>Track Order</Text>
+              <Text style={styles.modalButtonText}>
+                {isProcessingOrder ? 'Processing...' : 'Confirm Order'}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity

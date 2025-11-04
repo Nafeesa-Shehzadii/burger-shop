@@ -10,6 +10,41 @@ export interface MenuItem {
   restaurantName: string;
 }
 
+// Order-related types
+export interface OrderItem {
+  itemID: number;
+  itemName: string;
+  itemPrice: number;
+  quantity: number;
+  imageUrl: string;
+  selectedAddOns?: string[];
+}
+
+export enum OrderStatus {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  PREPARING = 'preparing',
+  OUT_FOR_DELIVERY = 'out_for_delivery',
+  DELIVERED = 'delivered',
+  CANCELLED = 'cancelled',
+}
+
+export interface Order {
+  id?: string;
+  userId: string;
+  userEmail: string;
+  items: OrderItem[];
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  status: OrderStatus;
+  deliveryAddress?: string;
+  specialInstructions?: string;
+  createdAt?: any; // Firestore Timestamp
+  updatedAt?: any; // Firestore Timestamp
+  estimatedDeliveryTime?: string;
+}
+
 export type RootStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
   DrawerNav: NavigatorScreenParams<DrawerParamList>;
