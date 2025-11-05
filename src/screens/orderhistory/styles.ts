@@ -1,0 +1,215 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    paddingTop: 50,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFF',
+  },
+  placeholder: {
+    width: 40,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#666',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 20,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    color: '#999',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  ordersContainer: {
+    padding: 16,
+  },
+  orderCount: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 16,
+  },
+  orderCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  orderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  orderHeaderLeft: {
+    flex: 1,
+  },
+  orderId: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+  orderDate: {
+    fontSize: 13,
+    color: '#999',
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 4,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FFF',
+    marginLeft: 4,
+  },
+  itemsContainer: {
+    marginBottom: 12,
+  },
+  orderItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingVertical: 8,
+  },
+  itemLeft: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    flex: 1,
+    marginRight: 8,
+  },
+  itemQuantity: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FF6B6B',
+    minWidth: 30,
+  },
+  itemDetails: {
+    flex: 1,
+  },
+  itemName: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  itemAddOns: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 2,
+  },
+  itemPrice: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+  },
+  deliveryInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F9F9F9',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  deliveryText: {
+    fontSize: 13,
+    color: '#666',
+    marginLeft: 8,
+    flex: 1,
+  },
+  orderFooter: {
+    borderTopWidth: 1,
+    borderTopColor: '#EEE',
+    paddingTop: 12,
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  totalLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  totalValue: {
+    fontSize: 14,
+    color: '#666',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#EEE',
+    marginVertical: 8,
+  },
+  grandTotalLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  grandTotalValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF6B6B',
+  },
+  estimatedTime: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFF5F5',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  estimatedTimeText: {
+    fontSize: 13,
+    color: '#FF6B6B',
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+});

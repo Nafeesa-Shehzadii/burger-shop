@@ -3,6 +3,7 @@ import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductDetailsScreen from '../screens/productdetails';
 import ReviewScreen from '../screens/review';
+import OrderHistoryScreen from '../screens/orderhistory';
 import DrawerNavigator from './DrawerNavigator';
 import AuthNavigator from './authNavigator';
 import type { RootStackParamList } from './types';
@@ -43,6 +44,7 @@ const RootNavigator = () => {
             component={ProductDetailsScreen}
           />
           <Stack.Screen name="Review" component={ReviewScreen} />
+          <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
         </>
       )}
     </Stack.Navigator>

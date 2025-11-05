@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,19 +6,45 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import auth from '@react-native-firebase/auth';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logoutUser } from '../../store/authSlice';
+import { subscribeToUserOrders } from '../../services/firebaseService';
+import type { Order } from '../../navigation/types';
 import { styles } from './styles';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const ProfileScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.auth.user);
   const cartItems = useAppSelector(state => state.cart.items);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+
+  // Subscribe to real-time order updates
+  useEffect(() => {
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      setLoadingOrders(false);
+      return;
+    }
+
+    const unsubscribe = subscribeToUserOrders(currentUser.uid, userOrders => {
+      setOrders(userOrders);
+      setLoadingOrders(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = () => {
     Alert.alert(
@@ -39,14 +65,17 @@ const ProfileScreen = () => {
     );
   };
 
+  const showOrderHistory = () => {
+    navigation.navigate('OrderHistory');
+  };
+
   const menuItems = [
     {
       id: '1',
       title: 'My Orders',
       icon: 'receipt-outline',
       iconType: 'ionicon',
-      onPress: () =>
-        Alert.alert('Coming Soon', 'My Orders feature coming soon!'),
+      onPress: showOrderHistory,
     },
     {
       id: '2',
@@ -129,7 +158,11 @@ const ProfileScreen = () => {
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>0</Text>
+              {loadingOrders ? (
+                <ActivityIndicator size="small" color="#FF6B6B" />
+              ) : (
+                <Text style={styles.statValue}>{orders.length}</Text>
+              )}
               <Text style={styles.statLabel}>Orders</Text>
             </View>
             <View style={styles.statDivider} />

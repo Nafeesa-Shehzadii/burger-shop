@@ -50,6 +50,7 @@ export type RootStackParamList = {
   DrawerNav: NavigatorScreenParams<DrawerParamList>;
   ProductDetails: { item: MenuItem };
   Review: { item: MenuItem };
+  OrderHistory: undefined;
 };
 
 export type AuthStackParamList = {
