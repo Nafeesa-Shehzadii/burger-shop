@@ -403,6 +403,349 @@ return () => unsubscribe();
 
 ---
 
+# Camera Permissions Setup with react-native-permissions
+
+This app uses [`react-native-permissions`](https://www.npmjs.com/package/react-native-permissions) for unified permission handling across iOS and Android. Camera permissions are required for the review feature where users can take photos of their burgers.
+
+## Why react-native-permissions?
+
+- **Unified API**: Single API for iOS, Android, and Windows permissions
+- **Better Control**: More granular control over permission states (unavailable, denied, blocked, granted, limited)
+- **Settings Integration**: Built-in `openSettings()` to guide users when permissions are blocked
+- **Type Safety**: Full TypeScript support with typed permission constants
+- **Platform Agnostic**: Automatically handles platform-specific permission flows
+
+## 1. Installation
+
+The package is already installed. If you need to reinstall:
+
+```bash
+npm install react-native-permissions
+```
+
+## 2. iOS Configuration
+
+### Step 2.1: Update Podfile
+
+The `ios/Podfile` has been configured with the permission setup script:
+
+```ruby
+# Transform this into a `node_require` generic function:
+def node_require(script)
+  # Resolve script with node to allow for hoisting
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
+
+# Use it to require both react-native's and this package's scripts:
+node_require('react-native/scripts/react_native_pods.rb')
+node_require('react-native-permissions/scripts/setup.rb')
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+# Setup permissions - only Camera is needed for this app
+setup_permissions([
+  'Camera',
+  # 'PhotoLibrary',
+  # 'PhotoLibraryAddOnly',
+])
+```
+
+**Important Notes:**
+
+- Only permissions listed in `setup_permissions([])` will be included in your app
+- This keeps your app lightweight and avoids unnecessary permission requests
+- Must run `pod install` after any changes to this configuration
+
+### Step 2.2: Install Pods
+
+After updating the Podfile, install the pods:
+
+```bash
+cd ios
+bundle exec pod install
+cd ..
+```
+
+### Step 2.3: Info.plist Configuration
+
+The `ios/burgershop/Info.plist` already contains the required usage descriptions:
+
+```xml
+<key>NSCameraUsageDescription</key>
+<string>We need camera access to let you take photos of your burgers for reviews</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to let you share burger photos in reviews</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>We need permission to save burger photos to your library</string>
+```
+
+**Best Practices:**
+
+- Keep descriptions clear and user-friendly
+- Explain exactly why the permission is needed
+- Apple reviews apps for appropriate permission usage
+
+## 3. Android Configuration
+
+### Step 3.1: AndroidManifest.xml
+
+The `android/app/src/main/AndroidManifest.xml` already includes camera permissions:
+
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+```
+
+**Note:** On Android 6.0+ (API 23+), these permissions are requested at runtime, not just at install time.
+
+## 4. Permission Flow Implementation
+
+### How It Works
+
+The app implements a comprehensive permission flow:
+
+```
+┌─────────────────────────┐
+│   User Opens Camera     │
+└───────────┬─────────────┘
+            │
+            ▼
+┌─────────────────────────┐
+│  Check Permission       │
+│  (check function)       │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │               │
+    ▼               ▼
+GRANTED        NOT GRANTED
+    │               │
+    │       ┌───────┴────────┐
+    │       │                │
+    │       ▼                ▼
+    │   DENIED           BLOCKED
+    │       │                │
+    │       ▼                ▼
+    │   Request         Open Settings
+    │   Permission      Dialog
+    │       │                │
+    │   ┌───┴────┐           │
+    │   │        │           │
+    │   ▼        ▼           │
+    │ GRANT   DENY           │
+    │   │        │           │
+    └───┴────────┴───────────┘
+            │
+            ▼
+    ┌─────────────┐
+    │ Show Camera │
+    └─────────────┘
+```
+
+### Permission States
+
+The library provides 5 possible permission states:
+
+1. **RESULTS.UNAVAILABLE**: Feature not available on device
+2. **RESULTS.DENIED**: Permission not requested yet or denied but can be requested again
+3. **RESULTS.BLOCKED**: Permission permanently denied (iOS) or denied with "Don't ask again" (Android)
+4. **RESULTS.GRANTED**: Permission granted
+5. **RESULTS.LIMITED**: Permission granted with limitations (iOS 14+ Photos)
+
+### Code Implementation
+
+See `src/components/camera/index.tsx` for the full implementation:
+
+```typescript
+import {
+  check,
+  request,
+  PERMISSIONS,
+  RESULTS,
+  openSettings,
+} from 'react-native-permissions';
+
+// Platform-specific permission constant
+const CAMERA_PERMISSION = Platform.select({
+  ios: PERMISSIONS.IOS.CAMERA,
+  android: PERMISSIONS.ANDROID.CAMERA,
+});
+
+// Check permission on component mount
+const checkCameraPermission = async () => {
+  const status = await check(CAMERA_PERMISSION);
+
+  if (status === RESULTS.DENIED) {
+    // Auto-request if denied
+    const requestStatus = await request(CAMERA_PERMISSION);
+    setPermissionStatus(requestStatus);
+  }
+};
+
+// Handle blocked permissions
+if (status === RESULTS.BLOCKED) {
+  Alert.alert(
+    'Permission Blocked',
+    'Camera permission is blocked. Please enable it in your device settings.',
+    [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Open Settings', onPress: () => openSettings() },
+    ],
+  );
+}
+```
+
+## 5. User Experience Flow
+
+### First Time User
+
+1. Opens review screen and taps "Take Photo"
+2. Camera component checks permission (DENIED)
+3. Automatically requests permission
+4. System dialog appears
+5. User grants → Camera opens
+6. User denies → Shows "Grant Permission" button
+
+### Permission Blocked
+
+1. User previously denied with "Don't ask again" (Android) or denied multiple times (iOS)
+2. Shows "Permission Blocked" message
+3. "Open Settings" button appears
+4. Taps button → Opens app settings
+5. User can manually enable camera permission
+
+### Permission Unavailable
+
+1. Device doesn't have a camera (rare)
+2. Shows "Camera is not available on this device"
+3. Only "Close" button available
+
+## 6. Testing Permissions
+
+### iOS Simulator
+
+- Reset permissions: Device → Erase All Content and Settings
+- Or: Settings → General → Reset → Reset Location & Privacy
+
+### Android Emulator
+
+- Settings → Apps → burgershop → Permissions → Camera
+- Toggle permissions on/off to test different states
+
+### Physical Devices
+
+- iOS: Settings → burgershop → Camera
+- Android: Settings → Apps → burgershop → Permissions → Camera
+
+## 7. Adding More Permissions
+
+If you need additional permissions in the future:
+
+### iOS
+
+1. Add permission to `setup_permissions([])` in Podfile:
+
+```ruby
+setup_permissions([
+  'Camera',
+  'PhotoLibrary',      # Add this
+  'Microphone',        # Or this
+])
+```
+
+2. Run `cd ios && bundle exec pod install`
+
+3. Add usage description to Info.plist
+
+### Android
+
+1. Add permission to AndroidManifest.xml:
+
+```xml
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
+
+2. Use in code:
+
+```typescript
+import { PERMISSIONS } from 'react-native-permissions';
+
+const MIC_PERMISSION = Platform.select({
+  ios: PERMISSIONS.IOS.MICROPHONE,
+  android: PERMISSIONS.ANDROID.RECORD_AUDIO,
+});
+```
+
+## 8. Troubleshooting
+
+**iOS: "Permission not working after pod install"**
+
+- Clean build: `cd ios && rm -rf Pods Podfile.lock && pod install`
+- Clean Xcode: Product → Clean Build Folder
+
+**Android: "Permission denied immediately"**
+
+- Check AndroidManifest.xml has the permission declared
+- Verify targetSdkVersion is 23 or higher in build.gradle
+- On Android 13+, some permissions require additional setup
+
+**"openSettings() not working"**
+
+- This is a platform limitation on some Android versions
+- The function will attempt to open settings but may fallback to app info
+
+**"Permission state not updating"**
+
+- Make sure you're using `await` with check/request functions
+- State updates are asynchronous
+
+## 9. Available Permissions Reference
+
+### iOS Permissions
+
+- `PERMISSIONS.IOS.CAMERA`
+- `PERMISSIONS.IOS.PHOTO_LIBRARY`
+- `PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY`
+- `PERMISSIONS.IOS.MICROPHONE`
+- `PERMISSIONS.IOS.LOCATION_WHEN_IN_USE`
+- `PERMISSIONS.IOS.LOCATION_ALWAYS`
+- [See full list](https://github.com/zoontek/react-native-permissions#ios)
+
+### Android Permissions
+
+- `PERMISSIONS.ANDROID.CAMERA`
+- `PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE`
+- `PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE`
+- `PERMISSIONS.ANDROID.RECORD_AUDIO`
+- `PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION`
+- [See full list](https://github.com/zoontek/react-native-permissions#android)
+
+## 10. Best Practices
+
+✅ **DO:**
+
+- Request permissions only when needed (just-in-time)
+- Provide clear explanations in usage descriptions
+- Handle all permission states (denied, blocked, unavailable)
+- Offer "Open Settings" for blocked permissions
+- Test on both iOS and Android
+
+❌ **DON'T:**
+
+- Request all permissions on app launch
+- Use generic permission descriptions
+- Ignore blocked/unavailable states
+- Assume permissions are always granted
+- Forget to add permissions to Podfile (iOS) or Manifest (Android)
+
+---
+
 # Generating a Signed APK for Production
 
 ## What is a Signed APK?
