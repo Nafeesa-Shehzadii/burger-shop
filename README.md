@@ -403,6 +403,206 @@ return () => unsubscribe();
 
 ---
 
+# Generating a Signed APK for Production
+
+## What is a Signed APK?
+
+A **Signed APK** is an Android application package that has been cryptographically signed with your release keystore certificate. This signature:
+
+- Verifies the app's authenticity and publisher identity
+- Is **required** for Google Play Store distribution
+- Ensures the app hasn't been tampered with after signing
+- Allows users to trust the app's source
+
+## Dev APK vs Signed APK
+
+| Feature          | Dev/Debug APK                       | Signed/Release APK         |
+| ---------------- | ----------------------------------- | -------------------------- |
+| **Keystore**     | Auto-generated debug keystore       | Your production keystore   |
+| **Purpose**      | Testing and development             | Production distribution    |
+| **Optimization** | No minification                     | Optimized and minified     |
+| **Play Store**   | ❌ Cannot publish                   | ✅ Required for publishing |
+| **Expiry**       | Debug keystore expires after 1 year | Valid for 25+ years        |
+| **Security**     | Low (shared debug key)              | High (unique to you)       |
+
+## Step 1: Generate Your Release Keystore
+
+⚠️ **CRITICAL**: Keep your keystore file and passwords safe! If you lose them, you cannot update your app on Play Store.
+
+### Generate the Keystore
+
+Open a terminal in your project root and run:
+
+```bash
+cd android/app
+keytool -genkeypair -v -storetype PKCS12 -keystore burgershop-release.keystore -alias burgershop-key-alias -keyalg RSA -keysize 2048 -validity 10000
+```
+
+You'll be prompted for:
+
+- **Keystore password**: Choose a strong password (remember this!)
+- **Key password**: Can be the same as keystore password
+- **Name**: Your name or company name
+- **Organizational unit**: Your team/department (e.g., "Development")
+- **Organization**: Your company name
+- **City**: Your city
+- **State**: Your state/province
+- **Country code**: Two-letter country code (e.g., "US", "PK")
+
+This creates `burgershop-release.keystore` in the `android/app/` directory.
+
+### Backup Your Keystore
+
+1. Copy `burgershop-release.keystore` to a secure location (USB drive, password manager, encrypted cloud storage)
+2. Save your passwords securely
+3. **Never commit the keystore to Git** (already protected by `.gitignore`)
+
+## Step 2: Configure Gradle Properties
+
+The configuration has already been added to `android/gradle.properties`. Update these values with your actual passwords:
+
+```properties
+BURGERSHOP_RELEASE_STORE_FILE=burgershop-release.keystore
+BURGERSHOP_RELEASE_KEY_ALIAS=burgershop-key-alias
+BURGERSHOP_RELEASE_STORE_PASSWORD=your_actual_keystore_password
+BURGERSHOP_RELEASE_KEY_PASSWORD=your_actual_key_password
+```
+
+⚠️ **Security Note**: For team projects, consider using environment variables or a secure secrets manager instead of storing passwords in `gradle.properties`.
+
+## Step 3: Get Release SHA-1 for Firebase
+
+For Firebase features (Google Sign-In, etc.) to work in the release APK, you need to add the release SHA-1 to Firebase:
+
+```bash
+cd android
+.\gradlew signingReport
+```
+
+Look for the **SHA-1** under the **release** variant (not debug). Copy it.
+
+### Add SHA-1 to Firebase:
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Select your project
+3. Go to Project Settings (gear icon)
+4. Select your Android app
+5. Click "Add fingerprint"
+6. Paste the release SHA-1
+7. Download the new `google-services.json` and replace the old one in `android/app/`
+
+## Step 4: Generate the Signed APK
+
+### Option A: Generate APK (Recommended for Testing)
+
+```bash
+cd android
+.\gradlew assembleRelease
+```
+
+The signed APK will be generated at:
+
+```
+android/app/build/outputs/apk/release/app-release.apk
+```
+
+### Option B: Generate AAB (Required for Play Store)
+
+Google Play Store requires Android App Bundle (AAB) format:
+
+```bash
+cd android
+.\gradlew bundleRelease
+```
+
+The signed AAB will be generated at:
+
+```
+android/app/build/outputs/bundle/release/app-release.aab
+```
+
+## Step 5: Test the Release APK
+
+### Install on Device
+
+```bash
+adb install android/app/build/outputs/apk/release/app-release.apk
+```
+
+### Test Checklist:
+
+- ✅ App launches successfully
+- ✅ Firebase Authentication works (Email/Password and Google Sign-In)
+- ✅ Firestore data loads correctly
+- ✅ All navigation flows work
+- ✅ No crashes or errors
+- ✅ App icon and splash screen display correctly
+
+## Step 6: Prepare for Play Store Upload
+
+### Required Assets:
+
+1. **App Bundle**: `app-release.aab` (from Step 4)
+2. **App Icon**: 512x512 PNG
+3. **Feature Graphic**: 1024x500 PNG
+4. **Screenshots**: At least 2 screenshots (phone and/or tablet)
+5. **Privacy Policy**: URL to your privacy policy
+6. **App Description**: Short and full description
+
+### Version Management:
+
+Before each release, update in `android/app/build.gradle`:
+
+```gradle
+defaultConfig {
+    applicationId "com.burgershop"
+    versionCode 2  // Increment this for each release
+    versionName "1.1"  // User-facing version
+}
+```
+
+## Troubleshooting
+
+**Error: "Keystore file not found"**
+
+- Ensure `burgershop-release.keystore` is in `android/app/` directory
+- Check the `BURGERSHOP_RELEASE_STORE_FILE` path in `gradle.properties`
+
+**Error: "Incorrect keystore password"**
+
+- Verify passwords in `gradle.properties` match what you set during keystore generation
+
+**Google Sign-In doesn't work in release**
+
+- Make sure you added the release SHA-1 to Firebase (Step 3)
+- Download and replace `google-services.json` after adding SHA-1
+
+**App crashes on startup**
+
+- Check ProGuard rules if `enableProguardInReleaseBuilds = true`
+- Test with `enableProguardInReleaseBuilds = false` first
+
+## Quick Reference Commands
+
+```bash
+# Generate release APK
+cd android && .\gradlew assembleRelease
+
+# Generate release AAB (for Play Store)
+cd android && .\gradlew bundleRelease
+
+# Install release APK on device
+adb install android/app/build/outputs/apk/release/app-release.apk
+
+# Get release SHA-1
+cd android && .\gradlew signingReport
+
+# Clean build
+cd android && .\gradlew clean
+```
+
+---
+
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
