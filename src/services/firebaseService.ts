@@ -127,14 +127,31 @@ export const subscribeToUserOrders = (
   return firestore()
     .collection(COLLECTIONS.ORDERS)
     .where('userId', '==', userId)
-    .orderBy('createdAt', 'desc')
-    .onSnapshot(snapshot => {
-      const orders = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Order[];
-      callback(orders);
-    });
+    .onSnapshot(
+      snapshot => {
+        if (!snapshot || !snapshot.docs) {
+          callback([]);
+          return;
+        }
+
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Order[];
+
+        const sortedOrders = orders.sort((a, b) => {
+          const aTime = a.createdAt?.toDate?.() || new Date(a.createdAt || 0);
+          const bTime = b.createdAt?.toDate?.() || new Date(b.createdAt || 0);
+          return bTime.getTime() - aTime.getTime();
+        });
+
+        callback(sortedOrders);
+      },
+      error => {
+        console.error('Error fetching orders:', error);
+        callback([]);
+      },
+    );
 };
 
 // Real-time updates for a specific order
